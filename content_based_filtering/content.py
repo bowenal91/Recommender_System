@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import sklearn
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 def get_bad_rows(df):
     N = len(df.index)
@@ -29,5 +29,10 @@ movie_data.drop(get_bad_rows(movie_data))
 #Inner join the two data sets on movie id
 
 data = pd.merge(movie_data,credit_data,on='id',how='inner')
+
+#The overview matrix will be used for comparing plots between two movies
+data['overview'] = data['overview'].fillna('')
+tfidf_transform = TfidfVectorizer(stop_words='english')
+overview_matrix = tfidf_transform.fit_transform(data['overview'])
 
 
