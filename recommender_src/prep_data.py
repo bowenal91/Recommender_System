@@ -135,6 +135,10 @@ def get_user_matrix(df):
         for j in range(N):
             if count_matrix[i][j] > 0.0:
                 user_matrix[i][j] /= count_matrix[i][j]
+
+    pickle_test = open("count_matrix.pickle","wb")
+    pickle.dump(count_matrix,pickle_test)
+    pickle_test.close()
     return user_matrix
 
 
@@ -169,36 +173,27 @@ data = update_jobs(data)
 data = generate_matrix_input(data)
 
 
-
 data = data.reset_index(drop=True)
 print(data.shape)
 movie_ids = pd.Series(data.index,index=data['title']).drop_duplicates()
 overview_matrix = get_overview_matrix(data['overview'])
 cast_matrix = get_people_matrix(data['matrix_input'])
+
+p1 = open("dataframe.pickle","wb")
+p2 = open("movie_ids.pickle","wb")
+p3 = open("overview_matrix.pickle","wb")
+p4 = open("cast_matrix.pickle","wb")
+p5 = open("user_matrix.pickle","wb")
+pickle.dump(data,p1)
+pickle.dump(movie_ids,p1)
+pickle.dump(overview_matrix,p1)
+pickle.dump(cast_matrix,p1)
+p1.close()
+p2.close()
+p3.close()
+p4.close()
+
 user_matrix = get_user_matrix(data)
-pickle_out = open("user_matrix.pickle","wb")
-pickle.dump(user_matrix,pickle_out)
-pickle_out.close()
-print(user_matrix)
-
-
-"""
-Run through the recommendation Algorithm
-"""
-
-
-title = "The Dark Knight"
-
-ID = movie_ids[title]
-#print(data['matrix_input'].iloc[ID], data['cast'].iloc[ID], data['writer'].iloc[ID], data['director'].iloc[ID],)
-
-#print(data['title'].iloc[movie_ids['The Avengers']])
-if isinstance(movie_ids[title],collections.Iterable):
-    for j,i in enumerate(movie_ids[title]):
-        print("Option {}".format(j+1))
-        test = get_recs(title,overview_matrix,cast_matrix,i)
-        print(data['title'].iloc[test])
-else:
-    test = get_recs(title, overview_matrix,cast_matrix,movie_ids[title])
-    print(data['title'].iloc[test])
+pickle.dump(user_matrix,p5)
+p5.close()
 
